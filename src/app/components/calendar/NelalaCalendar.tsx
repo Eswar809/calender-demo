@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
+import Image from "next/image";
 import { useCalendarNavigation } from "@/lib/hooks/useCalendarNavigation";
 import { useDateSelection } from "@/lib/hooks/useDateSelection";
 import { useImageColorExtraction } from "@/lib/hooks/useImageColorExtraction";
@@ -86,6 +87,13 @@ export default function NelalaCalendar() {
           backgroundSize: "20px 20px",
         }}
       />
+
+      {/* Preload all month images so there is no delay when switching */}
+      <div className="hidden" aria-hidden="true">
+        {MONTHS_DATA.map((month) => (
+          <Image key={month.name} src={month.img} alt="" width={1} height={1} priority unoptimized />
+        ))}
+      </div>
 
       {/* ── Floating aurora orbs ── */}
       <div
