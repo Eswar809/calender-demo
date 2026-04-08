@@ -1,26 +1,275 @@
+/**
+ * @fileoverview Nelala Calendar — Premium Global Styles & Animation System
+ *
+ * PREMIUM EDITION — Visual effects library:
+ *   1. Tailwind CSS v4 base layer
+ *   2. Theme tokens & typography
+ *   3. Month transition choreography (slide + pop)
+ *   4. 3D flip mechanics for SmartPanel
+ *   5. Micro-animations: pulse, sparkle, shimmer, aurora, float, glow
+ *   6. Glass morphism & depth effects
+ *   7. Selection state animations
+ *   8. Gradient border utilities
+ */
+
 @import "tailwindcss";
 
+/* ── Theme ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #1e293b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plus-jakarta-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ── */
+html, body {
+  height: 100%;
+  min-height: 100dvh;
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.safe-top    { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+
+/* ═══════════════════════════════════════════════════
+   MONTH TRANSITIONS
+   ═══════════════════════════════════════════════════ */
+
+@keyframes slideOutLeft {
+  to { transform: translateX(-40px); opacity: 0; }
+}
+
+@keyframes slideOutRight {
+  to { transform: translateX(40px); opacity: 0; }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.8) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.anim-slide-next { animation: slideOutLeft 0.25s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+.anim-slide-prev { animation: slideOutRight 0.25s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+.pop-in-wave { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+
+
+/* ═══════════════════════════════════════════════════
+   PREMIUM MICRO-ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+
+/* ── Today Pulse: breathing underline ── */
+@keyframes todayPulse {
+  0%, 100% { opacity: 1; transform: scaleX(1); }
+  50%      { opacity: 0.5; transform: scaleX(1.4); }
+}
+.today-pulse { animation: todayPulse 2.5s ease-in-out infinite; }
+
+/* ── Holiday Sparkle: glowing gold dot ── */
+@keyframes holidaySparkle {
+  0%, 100% { box-shadow: 0 0 3px rgba(230,126,34,0.6); transform: scale(1); }
+  25%      { box-shadow: 0 0 8px rgba(230,126,34,0.8), 0 0 14px rgba(230,126,34,0.3); transform: scale(1.2); }
+  50%      { box-shadow: 0 0 12px rgba(230,126,34,1), 0 0 24px rgba(230,126,34,0.4); transform: scale(1.35); }
+  75%      { box-shadow: 0 0 8px rgba(230,126,34,0.8), 0 0 14px rgba(230,126,34,0.3); transform: scale(1.2); }
+}
+.holiday-sparkle { animation: holidaySparkle 2.5s ease-in-out infinite; }
+
+/* ── Shimmer: gradient text sweep ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text { background-size: 200% auto; animation: shimmer 4s linear infinite; }
+
+/* ── Fade-in-up generic entrance ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.5s ease-out both; }
+
+/* ── Aurora Glow: ambient color-shifting orbs ── */
+@keyframes auroraGlow {
+  0%, 100% { opacity: 0.35; filter: blur(70px) hue-rotate(0deg); transform: scale(1) translate(0,0); }
+  33%      { opacity: 0.55; filter: blur(90px) hue-rotate(40deg); transform: scale(1.2) translate(6%,-4%); }
+  66%      { opacity: 0.45; filter: blur(80px) hue-rotate(-25deg); transform: scale(1.08) translate(-6%,4%); }
+}
+.aurora-glow { animation: auroraGlow 14s ease-in-out infinite; pointer-events: none; }
+
+/* ── Gentle Float: weightless hover ── */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.gentle-float { animation: gentleFloat 4s ease-in-out infinite; }
+
+/* ── Gradient Flow: animated gradient on text ── */
+@keyframes gradientFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.gradient-flow-text {
+  background-size: 300% 300%;
+  animation: gradientFlow 6s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Glow Pulse: breathing glow behind elements ── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 14px 3px var(--glow-color, rgba(99,102,241,0.3)); }
+  50%      { box-shadow: 0 0 28px 8px var(--glow-color, rgba(99,102,241,0.55)); }
+}
+.glow-pulse { animation: glowPulse 2.5s ease-in-out infinite; }
+
+/* ── Slide Up Bounce: stat card entrance ── */
+@keyframes slideUpBounce {
+  0%  { opacity: 0; transform: translateY(16px) scale(0.96); }
+  60% { transform: translateY(-3px) scale(1.01); }
+  100%{ opacity: 1; transform: translateY(0) scale(1); }
+}
+.slide-up-bounce { animation: slideUpBounce 0.5s cubic-bezier(0.2,0.8,0.2,1) both; }
+
+/* ── Shine sweep across surfaces ── */
+@keyframes shineSweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+.shine-sweep::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  animation: shineSweep 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Border gradient utility ── */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--gb-from, #6366f1), var(--gb-to, #a855f7));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   3D TRANSFORM UTILITIES
+   ═══════════════════════════════════════════════════ */
+
+.perspective-1000 { perspective: 1000px; }
+.preserve-3d      { transform-style: preserve-3d; }
+.backface-hidden   { backface-visibility: hidden; }
+.rotate-y-180      { transform: rotateY(180deg); }
+
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR UTILITIES
+   ═══════════════════════════════════════════════════ */
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.08);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0,0.15);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   GLASS MORPHISM
+   ═══════════════════════════════════════════════════ */
+
+.glass-panel {
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.glass-deep {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   MOBILE OPTIMIZATIONS
+   ═══════════════════════════════════════════════════ */
+
+@media (hover: none) {
+  button, [role="gridcell"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+:focus:not(:focus-visible) { outline: none; }
+
+
+/* ═══════════════════════════════════════════════════
+   NOTE INDICATOR & TAG ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+
+/* ── Note Dot Breathe: soft pulse for note indicators ── */
+@keyframes noteBreath {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.25); }
+}
+.note-breath { animation: noteBreath 2.8s ease-in-out infinite; }
+
+/* ── Tag Bounce: spring animation on tag selection ── */
+@keyframes tagBounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.92); }
+  60%  { transform: scale(1.08); }
+  80%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+.tag-bounce { animation: tagBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* ── Tag Glow: ambient breathing light on active tags ── */
+@keyframes tagGlow {
+  0%, 100% { box-shadow: 0 0 8px -2px var(--tag-color, #3b82f6); }
+  50%      { box-shadow: 0 0 16px -2px var(--tag-color, #3b82f6), 0 0 24px -4px var(--tag-color, #3b82f6); }
+}
+.tag-glow { animation: tagGlow 3s ease-in-out infinite; }
+
+/* ── Tag Active Stripe: decoration on active tag chip ── */
+@keyframes tagStripe {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+.tag-stripe-active {
+  background-size: 200% auto;
+  animation: tagStripe 5s linear infinite;
 }
